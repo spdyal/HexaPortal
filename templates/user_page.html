@@ -1,0 +1,29 @@
+{% extends "index.html" %}
+
+{% block content %}
+<h1>Миры пользователя {{user.name}} {% if user.mod %} <span class="badge badge-success">Модератор</span> {% endif %}</h1>
+{% if current_user.is_authenticated and current_user.mod and not user.mod %}
+    <a href="/make_mod/{{ user.id }}" class="btn btn-secondary">Сделать пользователя модератором</a>
+{% endif %}
+<div class="col-sm border rounded">
+    {% for item in user.worlds %}
+        <div class="col-md6 border rounded">
+        <h3>{{item.title}}</h4>
+        <h4>{{item.description}}</h4>
+        <div>
+        <a href="/download_world/{{ item.id }}" class="btn btn-secondary">
+                    Скачать
+        </a>
+        {% if current_user.is_authenticated and (current_user == item.owner or current_user.mod) %}
+                <a href="/edit_world/{{ item.id }}" class="btn btn-warning">
+                    Изменить
+                </a>
+                <a href="/delete_world/{{ item.id }}" class="btn btn-danger">
+                    Удалить
+                </a>
+            </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
